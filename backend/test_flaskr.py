@@ -56,73 +56,61 @@ class TriviaTestCase(unittest.TestCase):
         questions = [
             {
                 "answer": "Muhammad Ali",
-                "category": 4,
                 "difficulty": 1,
                 "question": "What boxer's original name is Cassius Clay?"
             },
             {
                 "answer": "Apollo 13",
-                "category": 5,
                 "difficulty": 4,
                 "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
             },
             {
                 "answer": "Tom Cruise",
-                "category": 5,
                 "difficulty": 4,
                 "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
             },
             {
                 "answer": "Edward Scissorhands",
-                "category": 5,
                 "difficulty": 3,
                 "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
             },
             {
                 "answer": "Brazil",
-                "category": 6,
                 "difficulty": 3,
                 "question": "Which is the only team to play in every soccer World Cup tournament?"
             },
             {
                 "answer": "Uruguay",
-                "category": 6,
                 "difficulty": 4,
                 "question": "Which country won the first ever soccer World Cup in 1930?"
             },
             {
                 "answer": "George Washington Carver",
-                "category": 4,
                 "difficulty": 2,
                 "question": "Who invented Peanut Butter?"
             },
             {
                 "answer": "The Palace of Versailles",
-                "category": 3,
                 "difficulty": 3,
                 "question": "In which royal palace would you find the Hall of Mirrors?"
             },
             {
                 "answer": "Agra",
-                "category": 3,
                 "difficulty": 2,
                 "question": "The Taj Mahal is located in which Indian city?"
             },
             {
                 "answer": "Escher",
-                "category": 2,
                 "difficulty": 1,
                 "question": "Which Dutch graphic artist–initials M C was a creator of optical illusions?"
             },
             {
                 "answer": "Nobody knows?",
-                "category": 3,
                 "difficulty": 2,
                 "question": "Who and the what now?"
             },
             {
                 "answer": "I'm going to cross you.",
-                "category": 1,
                 "difficulty": 5,
                 "question": "What did the chicken say to the road?"
             }
@@ -182,7 +170,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'not found')
 
     def test_delete_question(self):
-        # Insert a new question for deletion.
         first_id = Category.query.order_by(Category.id.asc()).first()
         last_id = Category.query.order_by(Category.id.desc()).first()
         question = Question(
@@ -194,7 +181,6 @@ class TriviaTestCase(unittest.TestCase):
         question.insert()
         question_id = question.id
 
-        # Run the deletion test
         res = self.client().delete(f'/questions/{question_id}')
         data = json.loads(res.data)
 
@@ -215,7 +201,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'not found')
 
     def test_create_question(self):
-        # Setup of new question
         first_id = Category.query.order_by(Category.id.asc()).first()
         last_id = Category.query.order_by(Category.id.desc()).first()
         request_body = {
@@ -225,7 +210,6 @@ class TriviaTestCase(unittest.TestCase):
             'category': randint(first_id.id, last_id.id)
         }
 
-        # Run the test
         res = self.client().post('/questions', json=request_body)
         data = json.loads(res.data)
 
@@ -331,7 +315,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(data['categories']))
 
     def test_404_get_categories_when_none_exist(self):
-        # Ensure no categories exist.
         questions = Question.query.all()
         for question in questions:
             question.delete()
